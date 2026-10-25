@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИнфоСкул</title>
+    <style>
+        :root {
+            --bg-main: #fafafa;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --accent: #3498db;
+            --accent-soft: #e1f0fa;
+            --border: #ecf0f1;
+            --shadow: rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            cursor: default;
+        }
+
+        /* Баннер */
+        .header-banner {
+            background: #ffffff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-banner h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-banner h1 img {
+            width: 28px;
+            height: 28px;
+            display: block;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-rules, .btn-support {
+            background-color: var(--accent-soft);
+            color: var(--accent);
+            padding: 8px 16px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .btn-rules:hover, .btn-support:hover {
+            background-color: var(--accent);
+            color: #ffffff;
+        }
+
+        .tg-link {
+            background-color: var(--accent-soft);
+            color: var(--accent);
+            padding: 8px 14px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .tg-link:hover {
+            background-color: var(--accent);
+            color: #ffffff;
+        }
+
+        /* Главный экран */
+        .main-screen {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            gap: 40px;
+            flex: 1;
+        }
+
+        .main-screen h2 {
+            font-size: 28px;
+            margin: 0;
+            font-weight: 400;
+            color: var(--text-primary);
+            max-width: 600px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 0;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            padding-left: 40px;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #ffffff;
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .schools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 20px;
+        }
+
+        .school-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 20px 15px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .school-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .btn-add-school {
+            margin-top: 40px;
+            padding: 12px 30px;
+            font-size: 16px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-add-school:hover {
+            background: #f5f5f5;
+            color: var(--text-primary);
+        }
+
+        /* Страница школы */
+        .school-page {
+            padding: 40px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .school-header {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .school-header h1 {
+            margin-top: 0;
+            color: var(--text-primary);
+            font-size: 28px;
+        }
+
+        .btn-publication {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-top: 20px;
+            transition: all 0.2s;
+        }
+
+        .btn-publication:hover {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .telegram-instr {
+            background: var(--accent-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            line-height: 1.7;
+        }
+
+        .telegram-instr code {
+            background: #ffffff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .back-home:hover {
+            background: #f5f5f5;
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.05);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            color: var(--text-primary);
+            position: relative;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        /* Таблица донатеров */
+        .supporters-table {
+            width: 100%;
+            max-width: 700px;
+            margin: 40px auto 0;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            overflow: hidden;
+        }
+
+        .supporters-table th, .supporters-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .supporters-table th {
+            background: var(--accent-soft);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .supporters-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Баннер с названием и контактами -->
+<header class="header-banner">
+    <h1>
+        ИнфоСкул
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Crect x='5' y='5' width='40' height='40' rx='8' fill='%233F8AE0'/%3E%3Ctext x='25' y='32' font-family='Arial, sans-serif' font-size='32' font-weight='bold' fill='%23FFFFFF' text-anchor='middle' dominant-baseline='middle'%3E%D0%98%3C/text%3E%3C/svg%3E" alt="Логотип ИнфоСкул">
+    </h1>
+    <div class="header-actions">
+        <a href="https://t.me/schoolinfoanon" target="_blank" class="btn-rules" id="openRules">ПРАВИЛА САЙТА</a>
+        <button class="btn-support" id="openSupport">ПОДДЕРЖАТЬ ПРОЕКТ</button>
+    </div>
+</header>
+
+<!-- Модальное окно с правилами -->
+<div id="rulesModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--text-primary); margin-top:0;">Правила сайта</h2>
+        <p>1. Мы не несем ответственности за достоверность информации.</p>
+        <p>2. Запрещены оскорбления, мат и личные данные (адреса, телефоны).</p>
+        <p>3. Чтобы добавить пост, перейдите в Telegram-канал <code>@schoolinfoanon</code>.</p>
+        <p>4. Выберите ветку комментариев вашей школы и напишите текст или прикрепите фото/видео.</p>
+        
+        <p style="font-style: italic; color: var(--text-secondary); margin-top: 20px;">
+            Мы не имеем отношения к информации. Мы являемся лишь новостной лентой, которая добавляет информацию, произошедшую в школах и которую нам предлагают их ученики. У сайта нет цели кого-либо оскорбить; если в предложенных новостях были замечены оскорбления, они отклоняются.
+        </p>
+
+        <button onclick="closeRules()" style="margin-top:20px; padding:10px 20px; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer;">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модальное окно поддержки -->
+<div id="supportModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--text-primary); margin-top:0;">Поддержать проект</h2>
+        <p>Чтобы поддержать проект, отправьте подарок в канал <code>@schoolinfoanon</code> в телеграм.</p>
+        <p style="font-style: italic; color: var(--text-secondary); margin-top: 20px;">
+            Поддержавшие проект пользователи будут отображаться в таблице на главном экране.
+        </p>
+        <button onclick="closeSupport()" style="margin-top:20px; padding:10px 20px; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer;">Закрыть</button>
+    </div>
+</div>
+
+<!-- Главный экран -->
+<main class="main-screen">
+    <h2>Выбирай свою школу и смотри, что пишут ученики</h2>
+    <p class="subtitle">Информация о происходящем в школах Санкт-Петербурга от учеников</p>
+    
+    <!-- Поисковая строка -->
+    <div class="search-container">
+        <input type="text" id="schoolSearch" class="search-input" placeholder="Поиск по названию или номеру...">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </div>
+    
+    <div class="schools-grid" id="schoolsGrid">
+        <button class="school-btn" onclick="openSchool('453')">ШКОЛА 453</button>
+        <button class="school-btn" onclick="openSchool('494')">ШКОЛА 494</button>
+    </div>
+
+    <button class="school-btn btn-add-school" onclick="addSchool()">+ ДОБАВИТЬ СВОЮ ШКОЛУ</button>
+
+    <!-- Таблица поддержавших (пустая) -->
+    <table class="supporters-table">
+        <thead>
+            <tr>
+                <th>Пользователь</th>
+                <th>Подарок</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</main>
+
+<!-- Страница конкретной школы -->
+<div id="schoolPage" style="display:none;">
+    <div class="school-page">
+        <a href="#" class="back-home" onclick="goBack()">← Назад</a>
+        
+        <div class="school-header" id="schoolContent">
+        </div>
+
+        <a href="#" class="btn-publication" onclick="openPublicationGuide()">
+            СДЕЛАТЬ ПУБЛИКАЦИЮ
+        </a>
+    </div>
+</div>
+
+<script>
+    const schoolsData = {
+        "453": {
+            name: "Школа № 453",
+            address: "г. Санкт-Петербург, ул. Жени Егоровой, д. 10, к. 2, лит. А",
+            info: "Сюда попадают посты, которые добавили ученики данной школы."
+        },
+        "494": {
+            name: "Школа № 494",
+            address: "г. Санкт-Петербург, ул. Композиторов, д. 22, к. 2",
+            info: "Сюда попадают посты, которые добавили ученики данной школы."
+        }
+    };
+
+    const searchInput = document.getElementById('schoolSearch');
+    const grid = document.getElementById('schoolsGrid');
+    const originalButtons = grid.innerHTML;
+
+    // Функция фильтрации
+    function filterSchools() {
+        const term = searchInput.value.toLowerCase();
+        
+        if (term === '') {
+            grid.innerHTML = originalButtons;
+            return;
+        }
+
+        const buttons = grid.querySelectorAll('.school-btn');
+        let hasResults = false;
+
+        buttons.forEach(button => {
+            const text = button.textContent.toLowerCase();
+            if (text.includes(term)) {
+                button.style.display = 'flex';
+                hasResults = true;
+            } else {
+                button.style.display = 'none';
+            }
+        });
+
+        if (!hasResults) {
+            grid.innerHTML = '<p style="grid-column: 1 / -1; color: var(--text-secondary);">Ничего не найдено</p>';
+        }
+    }
+
+    searchInput.addEventListener('input', filterSchools);
+
+    function openSchool(id) {
+        document.querySelector('main').style.display = 'none';
+        document.getElementById('schoolPage').style.display = 'block';
+        
+        const data = schoolsData[id];
+        const container = document.getElementById('schoolContent');
+        
+        container.innerHTML = `
+            <h1>${data.name}</h1>
+            <p style="color:var(--text-secondary); font-size:16px;">📍 ${data.address}</p>
+            <p>${data.info}</p>
+        `;
+        
+        document.title = `${data.name} | ИнфоСкул`;
+    }
+
+    function goBack() {
+        document.getElementById('schoolPage').style.display = 'none';
+        document.querySelector('main').style.display = 'block';
+        document.title = 'ИнфоСкул';
+    }
+
+    function addSchool() {
+        alert('Форма добавления новой школы находится в разработке.');
+    }
+
+    function openPublicationGuide() {
+        alert('Чтобы добавить пост, напишите в @schoolinfoanon.');
+    }
+
+    document.getElementById('openRules').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('rulesModal').style.display = 'flex';
+    });
+
+    function closeRules() {
+        document.getElementById('rulesModal').style.display = 'none';
+    }
+
+    document.getElementById('openSupport').addEventListener('click', function() {
+        document.getElementById('supportModal').style.display = 'flex';
+    });
+
+    function closeSupport() {
+        document.getElementById('supportModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modalRules = document.getElementById('rulesModal');
+        const modalSupport = document.getElementById('supportModal');
+        if (event.target == modalRules) {
+            modalRules.style.display = 'none';
+        }
+        if (event.target == modalSupport) {
+            modalSupport.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>
